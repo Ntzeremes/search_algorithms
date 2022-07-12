@@ -129,11 +129,9 @@ class Image_Button:
                     fill = (80, 80, 80)
 
                 # Draw cell
-                draw.rectangle(
-                    ([(j * block + cell_border, i * block + cell_border),
-                      ((j + 1) * block - cell_border, (i + 1) * block - cell_border)]),
-                    fill=fill
-                )
+                draw.rectangle([(j * block + cell_border, i * block + cell_border),
+                                ((j + 1) * block - cell_border, (i + 1) * block - cell_border)], fill=fill
+                               )
 
         img.save("labyrinth.png")
 
@@ -153,7 +151,7 @@ class Button_Collection:
 
 # noinspection PyUnresolvedReferences
 def starting_gui(screen, font, width, top_pad, right_pad):
-    """Created the starting screen from which the user will choose the size of the labyrinth.
+    """Creating the starting screen from which the user will choose the size of the labyrinth.
 
     Returns the grid size chosen by the user."""
 
@@ -161,7 +159,7 @@ def starting_gui(screen, font, width, top_pad, right_pad):
     clock = pygame.time.Clock()
 
     choice = None
-    grid_choices = {0: [None, "9 x 6", (9, 6)], 1: [None, "15 x 12", (15, 12)], 2: [None, "30 x 20", (30, 20)],
+    grid_choices = {0: [None, "9 x 6", (9, 6)], 1: [None, "15 x 10", (15, 10)], 2: [None, "30 x 20", (30, 20)],
                     3: [None, "60 x 40", (60, 40)]}
     text = "Choose the labyrinth grid size."
     page_text = Text(font, (100, 100), width - right_pad, 40, text)
@@ -191,9 +189,10 @@ def starting_gui(screen, font, width, top_pad, right_pad):
 
 
 def lab_gui(font, width, height, top_pad, right_pad, d, p):
+    # TEXT FOR CHOICES
     button_font = pygame.font.SysFont("sanscomic", 55)
-    horizontal_text = "space: restart labyrinth     R : reset the grid size"
-    h_text = Text(font, (0, 0), width - 2 * right_pad, 50, horizontal_text, (0, 0, 0), (80, 80, 80))
+    horizontal_text = "Space: clear labyrinth    R : reset the grid size    S :  search algo"
+    h_text = Text(font, (90, 0), width - 2 * right_pad, 50, horizontal_text, (0, 0, 0), (80, 80, 80))
 
     # d text and buttons
     vertical_text1 = f"d:{d}"
@@ -224,6 +223,42 @@ def lab_gui(font, width, height, top_pad, right_pad, d, p):
     buttons = Button_Collection([d_plus, d_minus, p_minus, p_plus])
     collection = Text_Collection([h_text, v_text1, v_text2])
     return collection, buttons, save_button
+
+
+def search_gui(screen, font, width, top_pad, right_pad):
+    """Creating the gui from which the user will choose an algorithm"""
+
+    terminate = False
+    clock = pygame.time.Clock()
+
+    choice = None
+    grid_choices = {0: [None, "Breadth first", 0], 1: [None, "Depth First", 1], 2: [None, "A*", 2],
+                    3: [None, "TROLOLO", 3]}
+    text = "Choose the labyrinth grid size."
+    page_text = Text(font, (100, 100), width - right_pad, 40, text)
+    button_h = 90
+    for i in range(len(grid_choices)):
+        # noinspection PyTypeChecker
+        grid_choices[i][0] = Button(grid_choices[i][1], 200, 50, (400, 210 + i * button_h), font)
+
+    while not terminate:
+        screen.fill((0, 0, 0))
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate = True
+
+        page_text.draw(screen)
+
+        for i in range(len(grid_choices)):
+            grid_choices[i][0].draw(screen)
+            if grid_choices[i][0].check_click():
+                choice = grid_choices[i][2]
+                terminate = True
+
+        pygame.display.flip()
+
+    return choice
 
 
 def draw_grid(screen, screen_width, screen_height, width, height, top_pad):

@@ -2,6 +2,7 @@
 The function path inside the labyrinth class is the one that starts end generates the labyrinth
 inside the grid"""
 
+import time
 import random
 import pygame
 
@@ -103,6 +104,7 @@ class Node:
         If the parent node has a parent itself, then there is a higher chance that the child will follow the direction
         of the parent. This is done to create somewhat straight paths.
         There is also a small chance that the node will have a second child, that will create a new branch-path."""
+
         neighbors = self.neighbors(lab)
 
         if not neighbors:
@@ -127,13 +129,15 @@ class Node:
             else:
                 first_child = Node((self.pos_x, self.pos_y), random.choice(neighbors))
         else:
-            # if no parent, i case of starting the labyrinth, choose randomly from the neighbors
+            # if no parent we are at the starting Node, in case of starting the labyrinth,
+            # choose randomly from the neighbors
             first_child = Node((self.pos_x, self.pos_y), random.choice(neighbors))
 
         l = len(neighbors)
 
         # Chance to create a new branch
         if l == 0:
+            # No neighboors left so we exit
             return None
         elif l > 1:
             propagate = random.random()
@@ -188,10 +192,13 @@ class Labyrinth:
         self.screen = None
         self.block = None
         self.pad = None
+        self.empty = True
 
     # noinspection PyTypeChecker
-    def insert(self, x, y):
-        """inserts a node in grid and prints it"""
+    def insert(self, node):
+        """inserts a node in grid and draws it"""
+        x = node.pos_x
+        y = node.pos_y
         self.grid[y][x] = 0
         if self.screen:
             pygame.draw.rect(self.screen, (175, 175, 175),
@@ -213,24 +220,25 @@ class Labyrinth:
         self.block = block
         self.pad = pad
 
-    def path(self, x, y):
+    def path(self, x, y, step=0):
         """This function generates a random path inside the grid.
         The path starts at a x,y point in the grid """
 
-        current_nodes = [Node(None, (x, y))]
-        self.insert(current_nodes[0].pos_x, current_nodes[0].pos_y)
+        self.empty = False
+
+        start = Node(None, (x, y))
+        current_nodes = []
+        self.insert(start)
+        first_children = start.children(self)
+        if first_children:
+            current_nodes.extend(first_children)
+
         while current_nodes:
+            time.sleep(step)
             current_node = current_nodes.pop(0)
             if current_node.can_insert(self.width, self.height, self.grid):
-                self.insert(current_node.pos_x, current_node.pos_y)
-            else:
-                # Sometimes a child that was originally calculated can't be inserted cause of the other branches.
-                child = current_node.children(self)
-                if child:
-                    current_node = random.choice(child)
-                    if current_node.can_insert(self.width, self.height, self.grid):
-                        self.insert(current_node.pos_x, current_node.pos_y)
+                self.insert(current_node)
 
-            children = current_node.children(self)
-            if children:
-                current_nodes.extend(children)
+                children = current_node.children(self)
+                if children:
+                    current_nodes.extend(children)
