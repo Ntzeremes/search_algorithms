@@ -205,6 +205,15 @@ class Labyrinth:
                              (x * self.block + 2, y * self.block + 2 + self.pad, self.block - 2, self.block - 2))
             pygame.display.flip()
 
+    def draw_lab(self):
+        """When we choose a search algorithm , we draw the previously picked labyrinth"""
+        for x in range(self.width):
+            for y in range(self.height):
+                if self.grid[y][x] is not None:
+                    pygame.draw.rect(self.screen, (175, 175, 175),
+                                     (
+                                     x * self.block + 2, y * self.block + 2 + self.pad, self.block - 2, self.block - 2))
+
     def reset(self):
         """resets the grid of labyrinth"""
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]

@@ -30,14 +30,17 @@ def main():
 
     terminate = False
     start_settings = False
-    page = 1
+    chosen_algo = False
+    part = 1
     while not terminate:
         clock.tick(10)
 
-        # Gui to choose the grid size, at the start of the program or when reset
-        if not start_settings:
-            # page 1 is the starting page where the user chooses the grid
-            if page == 1:
+        # part 1 is the starting page where the user chooses the grid and the labyrinth generetor
+        if part == 1:
+
+            # Gui to choose the grid size, at the start of the program or when reset
+            if not start_settings:
+
                 grid_choice = starting_gui(screen, start_font, lab_width, top_pad, right_pad)  # looping till we choose
 
                 # If we decided to close the settings we get no choice. So we need an if clause to check this and
@@ -54,44 +57,57 @@ def main():
                     start_settings = True
                 else:
                     terminate = True
-            # page 2 is the page where the user chooses the searching algorithm to use.
-            else:
-                algo = search_gui(screen, start_font, lab_width, top_pad, right_pad)
-                print(algo)
-                start_settings = True
 
-        if start_settings:
+            if start_settings:
 
-            text_collection.draw(screen)
-            buttons.draw(screen)
-            save_button.draw(screen)
-            buttons.ckeck_click()
-            save_button.check_click(lab)
+                text_collection.draw(screen)
+                buttons.draw(screen)
+                save_button.draw(screen)
+                buttons.ckeck_click()
+                save_button.check_click(lab)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    terminate = True
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        terminate = True
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    x = int((event.pos[0]) // block)
-                    y = int((event.pos[1] - top_pad) // block)
-                    if 0 <= x < width and 0 <= y < height:
-                        print(x, y)
-                        lab.path(x, y)
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        x = int((event.pos[0]) // block)
+                        y = int((event.pos[1] - top_pad) // block)
+                        if 0 <= x < width and 0 <= y < height:
+                            lab.path(x, y)
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        lab.reset()
-                        draw_grid(screen, lab_width, lab_height, width, height, top_pad)
-                        pygame.display.flip()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            lab.reset()
+                            draw_grid(screen, lab_width, lab_height, width, height, top_pad)
+                            pygame.display.flip()
 
-                    if event.key == pygame.K_r:
-                        start_settings = False
-
-                    if event.key == pygame.K_s:
-                        if not lab.empty:
-                            page = 2
+                        if event.key == pygame.K_r:
                             start_settings = False
+
+                        if event.key == pygame.K_s:
+                            if not lab.empty:
+                                part = 2
+
+        # part 2 is the page where the user chooses the searching algorithm to use and then the search algo in the lab
+        else:
+            if not chosen_algo:
+
+                algo = search_choice_gui(screen, start_font, lab_width, top_pad, right_pad)
+
+                if algo:
+                    algo_choice = algo
+                    screen.fill((80, 80, 80))
+                    draw_grid(screen, lab_width, lab_height, width, height, top_pad)
+                    lab.draw_lab()
+                    chosen_algo = True
+                    print("chosen")
+                else:
+                    terminate = True
+            else:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        terminate = True
 
         pygame.display.flip()
 

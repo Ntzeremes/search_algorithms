@@ -225,21 +225,21 @@ def lab_gui(font, width, height, top_pad, right_pad, d, p):
     return collection, buttons, save_button
 
 
-def search_gui(screen, font, width, top_pad, right_pad):
+def search_choice_gui(screen, font, width, top_pad, right_pad):
     """Creating the gui from which the user will choose an algorithm"""
 
     terminate = False
     clock = pygame.time.Clock()
 
     choice = None
-    grid_choices = {0: [None, "Breadth first", 0], 1: [None, "Depth First", 1], 2: [None, "A*", 2],
-                    3: [None, "TROLOLO", 3]}
-    text = "Choose the labyrinth grid size."
+    grid_choices = {0: [None, "Breadth first", 1], 1: [None, "Depth First", 2], 2: [None, "A*", 3],
+                    3: [None, "b", 4]}
+    text = "Choose search algorithm."
     page_text = Text(font, (100, 100), width - right_pad, 40, text)
     button_h = 90
     for i in range(len(grid_choices)):
         # noinspection PyTypeChecker
-        grid_choices[i][0] = Button(grid_choices[i][1], 200, 50, (400, 210 + i * button_h), font)
+        grid_choices[i][0] = Button(grid_choices[i][1], 240, 50, (380, 210 + i * button_h), font)
 
     while not terminate:
         screen.fill((0, 0, 0))
