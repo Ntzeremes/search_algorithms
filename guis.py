@@ -150,7 +150,7 @@ class Button_Collection:
 
 
 # noinspection PyUnresolvedReferences
-def starting_gui(screen, font, width, top_pad, right_pad):
+def start_gui(screen, font, width, top_pad, right_pad):
     """Creating the starting screen from which the user will choose the size of the labyrinth.
 
     Returns the grid size chosen by the user."""
@@ -158,24 +158,26 @@ def starting_gui(screen, font, width, top_pad, right_pad):
     terminate = False
     clock = pygame.time.Clock()
 
+    # possible choices
     choice = None
     grid_choices = {0: [None, "9 x 6", (9, 6)], 1: [None, "15 x 10", (15, 10)], 2: [None, "30 x 20", (30, 20)],
                     3: [None, "60 x 40", (60, 40)]}
     text = "Choose the labyrinth grid size."
     page_text = Text(font, (100, 100), width - right_pad, 40, text)
     button_h = 90
+
     for i in range(len(grid_choices)):
         # noinspection PyTypeChecker
         grid_choices[i][0] = Button(grid_choices[i][1], 200, 50, (400, 210 + i * button_h), font)
 
+    screen.fill((0, 0, 0))
+    page_text.draw(screen)
+
     while not terminate:
-        screen.fill((0, 0, 0))
-        clock.tick(60)
+        clock.tick(15)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate = True
-
-        page_text.draw(screen)
 
         for i in range(len(grid_choices)):
             grid_choices[i][0].draw(screen)
@@ -237,20 +239,21 @@ def search_choice_gui(screen, font, width, top_pad, right_pad):
     text = "Choose search algorithm."
     page_text = Text(font, (100, 100), width - right_pad, 40, text)
     button_h = 90
-    for i in range(len(grid_choices)):
+
+    for i , _ in enumerate(grid_choices):
         # noinspection PyTypeChecker
         grid_choices[i][0] = Button(grid_choices[i][1], 240, 50, (380, 210 + i * button_h), font)
 
     while not terminate:
         screen.fill((0, 0, 0))
-        clock.tick(60)
+        clock.tick(15)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate = True
 
         page_text.draw(screen)
 
-        for i in range(len(grid_choices)):
+        for i, _ in enumerate(grid_choices):
             grid_choices[i][0].draw(screen)
             if grid_choices[i][0].check_click():
                 choice = grid_choices[i][2]
@@ -260,16 +263,3 @@ def search_choice_gui(screen, font, width, top_pad, right_pad):
 
     return choice
 
-
-def draw_grid(screen, screen_width, screen_height, width, height, top_pad):
-    """ Creates the height x width  grid of the labyrinth.
-    Used when we start the program and every time we reset the labyrinth"""
-
-    pygame.draw.rect(screen, (80, 80, 80), (0, top_pad, screen_width, screen_height))
-    block = screen_width // width
-    pygame.draw.line(screen, (0, 0, 0), (0, top_pad), (screen_width, top_pad), 2)
-    for i in range(height - 1):
-        pygame.draw.line(screen, (0, 0, 0), (0, (i + 1) * block + top_pad), (screen_width, (i + 1) * block + top_pad),
-                         2)
-    for j in range(width):
-        pygame.draw.line(screen, (0, 0, 0), ((j + 1) * block, top_pad), ((j + 1) * block, screen_height + top_pad), 2)
