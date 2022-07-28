@@ -185,13 +185,15 @@ class Labyrinth:
     is represented by values 0. Also has some basic functions for extra utility - manipulation and the function that
     creates the path."""
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, screen_width, screen_height, screen, block, top_pad):
         self.grid = [[None for _ in range(width)] for _ in range(height)]
         self.width = width
         self.height = height
-        self.screen = None
-        self.block = None
-        self.pad = None
+        self.screen_height = screen_height
+        self.screen_width = screen_width
+        self.screen = screen
+        self.block = block
+        self.top_pad = top_pad
         self.empty = True
 
     # noinspection PyTypeChecker
@@ -202,17 +204,17 @@ class Labyrinth:
         self.grid[y][x] = 0
         if self.screen:
             pygame.draw.rect(self.screen, (175, 175, 175),
-                             (x * self.block + 2, y * self.block + 2 + self.pad, self.block - 2, self.block - 2))
+                             (x * self.block + 2, y * self.block + 2 + self.top_pad, self.block - 2, self.block - 2))
             pygame.display.flip()
 
-    def draw_lab(self):
+    def draw_tiles(self):
         """When we choose a search algorithm , we draw the previously picked labyrinth"""
         for x in range(self.width):
             for y in range(self.height):
                 if self.grid[y][x] is not None:
                     pygame.draw.rect(self.screen, (175, 175, 175),
-                                     (
-                                     x * self.block + 2, y * self.block + 2 + self.pad, self.block - 2, self.block - 2))
+                                     ( x * self.block + 2, y * self.block + 2 + self.top_pad,
+                                       self.block - 2, self.block - 2))
 
     def reset(self):
         """resets the grid of labyrinth"""
@@ -222,12 +224,6 @@ class Labyrinth:
         for i in range(self.height):
             print(self.grid[i])
             print()
-
-    def set_visual_p(self, screen, block, pad):
-        """passes the screen and block variables so that can be used from the class"""
-        self.screen = screen
-        self.block = block
-        self.pad = pad
 
     def path(self, x, y, step=0):
         """This function generates a random path inside the grid.
@@ -251,3 +247,17 @@ class Labyrinth:
                 children = current_node.children(self)
                 if children:
                     current_nodes.extend(children)
+
+    def draw_grid(self):
+        """ Creates the height x width  grid of the labyrinth.
+        Used when we start the program and every time we reset the labyrinth"""
+
+        pygame.draw.rect(self.screen, (80, 80, 80), (0, self.top_pad, self.screen_width, self.screen_height))
+        pygame.draw.line(self.screen, (0, 0, 0), (0, self.top_pad), (self.screen_width, self.top_pad), 2)
+        for i in range(self.height - 1):
+            pygame.draw.line(self.screen, (0, 0, 0), (0, (i + 1) * self.block + self.top_pad),
+                             (self.screen_width, (i + 1) * self.block + self.top_pad),
+                             2)
+        for j in range(self.width):
+            pygame.draw.line(self.screen, (0, 0, 0), ((j + 1) * self.block, self.top_pad),
+                             ((j + 1) * self.block, self.screen_height + self.top_pad), 2)
