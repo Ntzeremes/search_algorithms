@@ -37,7 +37,7 @@ def main():
     while not terminate:
         clock.tick(15)
 
-        # part 1 is the starting page where the user chooses the grid and the labyrinth generator
+        # part 1 is the starting part , first the user chooses the grid and the labyrinth generator
         if part == 1:
 
             # Gui to choose the grid size, at the start of the program or when reset
@@ -59,7 +59,7 @@ def main():
                 else:
                     terminate = True
 
-            # when grid size is chosen we proceed to the lab gui
+            # when grid size is chosen we go to the lab gui
             if grid_choice:
 
                 buttons.draw(screen)
@@ -102,13 +102,24 @@ def main():
                     lab.draw_grid()
                     lab.draw_tiles()
                     algo_choice = True
-                    print("chosen")
+                    algo_text, start_button = algo_gui(lab_font, screen_width, screen_height, top_pad, right_pad, algo)
+                    algo_text.draw(screen)
                 else:
                     terminate = True
             else:
+                start_button.draw(screen)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         terminate = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        x = int((event.pos[0]) // block)
+                        y = int((event.pos[1] - top_pad) // block)
+                        if 0 <= x < grid_width and 0 <= y < grid_height:
+                            if not lab.start or not lab.end:
+                                if not lab.start:
+                                    lab.set_start(x, y)
+                                elif lab.start:
+                                    lab.set_end(x, y)
 
         pygame.display.flip()
 

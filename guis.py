@@ -240,7 +240,7 @@ def search_choice_gui(screen, font, width, top_pad, right_pad):
     page_text = Text(font, (100, 100), width - right_pad, 40, text)
     button_h = 90
 
-    for i , _ in enumerate(grid_choices):
+    for i, _ in enumerate(grid_choices):
         # noinspection PyTypeChecker
         grid_choices[i][0] = Button(grid_choices[i][1], 240, 50, (380, 210 + i * button_h), font)
 
@@ -263,3 +263,18 @@ def search_choice_gui(screen, font, width, top_pad, right_pad):
 
     return choice
 
+
+def algo_gui(font, width, height, top_pad, right_pad, algo):
+    # TEXT FOR CHOICES
+    button_font = pygame.font.SysFont("sanscomic", 55)
+    horizontal_text = "Space: reset start-end    R : reset the grid size    S :  search algo"
+    h_text = Text(font, (90, 0), width - 2 * right_pad, 50, horizontal_text, (0, 0, 0), (80, 80, 80))
+
+    algo_dict = {1: "BFS", 2: "DFS", 3: "A*", 4: "None"}
+
+    button_h = 90
+    start_button = Button(f"Start {algo_dict[algo]}", 80, 100, (width + 10, 210 + 1 * button_h), font)
+
+    collection = Text_Collection([h_text])
+
+    return collection, start_button

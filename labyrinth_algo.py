@@ -195,6 +195,8 @@ class Labyrinth:
         self.block = block
         self.top_pad = top_pad
         self.empty = True
+        self.start = None
+        self.end = None
 
     # noinspection PyTypeChecker
     def insert(self, node):
@@ -261,3 +263,20 @@ class Labyrinth:
         for j in range(self.width):
             pygame.draw.line(self.screen, (0, 0, 0), ((j + 1) * self.block, self.top_pad),
                              ((j + 1) * self.block, self.screen_height + self.top_pad), 2)
+
+    def set_start(self, x, y):
+        if self.grid[y][x] is not None:
+            self.start = (x, y)
+            self.grid[y][x] = "S"
+            pygame.draw.rect(self.screen, (0, 125, 0),
+                             (x * self.block + 2, y * self.block + 2 + self.top_pad,
+                              self.block - 2, self.block - 2))
+
+    def set_end(self, x, y):
+        if self.grid[y][x] is not None:
+            self.start = (x, y)
+            self.grid[y][x] = "E"
+            pygame.draw.rect(self.screen, (125, 0, 0),
+                             (x * self.block + 2, y * self.block + 2 + self.top_pad,
+                              self.block - 2, self.block - 2))
+
