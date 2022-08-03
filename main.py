@@ -10,7 +10,7 @@ def main():
     """
 
     # screen size and paddings
-    top_pad = 50
+    top_pad = 110
     right_pad = 100
     screen_width = 900
     screen_height = 600
@@ -23,7 +23,7 @@ def main():
 
     # Initialize font and labyrinth text info
     start_font = pygame.font.SysFont("arial", 40)
-    lab_font = pygame.font.SysFont("sanscomic", 40)
+    lab_font = pygame.font.SysFont("arial", 30)
     lab, grid_width, grid_height, block = None, None, None, None
     text_collection, buttons, save_button = lab_gui(lab_font, screen_width, screen_height, top_pad, right_pad,
                                                     Node.same_direction, Node.propagate_chance)
@@ -50,7 +50,6 @@ def main():
                     block = screen_width // grid_width
 
                     screen.fill((80, 80, 80))
-                    text_collection.draw(screen)
                     lab = Labyrinth(grid_width, grid_height, screen_width, screen_height, screen, block, top_pad)
                     lab.draw_grid()
                     pygame.display.flip()
@@ -64,6 +63,7 @@ def main():
 
                 buttons.draw(screen)
                 save_button.draw(screen)
+                text_collection.draw(screen)
                 buttons.ckeck_click()
                 save_button.check_click(lab)
 
@@ -102,24 +102,42 @@ def main():
                     lab.draw_grid()
                     lab.draw_tiles()
                     algo_choice = True
-                    algo_text, start_button = algo_gui(lab_font, screen_width, screen_height, top_pad, right_pad, algo)
+                    algo_text, start_button = algo_gui(lab_font, screen_width, screen_height, top_pad,
+                                                       right_pad, algo)
                     algo_text.draw(screen)
                 else:
                     terminate = True
             else:
                 start_button.draw(screen)
                 for event in pygame.event.get():
+
                     if event.type == pygame.QUIT:
                         terminate = True
+
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         x = int((event.pos[0]) // block)
                         y = int((event.pos[1] - top_pad) // block)
                         if 0 <= x < grid_width and 0 <= y < grid_height:
-                            if not lab.start or not lab.end:
-                                if not lab.start:
-                                    lab.set_start(x, y)
-                                elif lab.start:
-                                    lab.set_end(x, y)
+                            if not lab.start:
+                                lab.set_start(x, y)
+                            elif lab.start and not lab.end:
+                                lab.set_end(x, y)
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_r:
+                            grid_choice = False
+                            algo_choice = False
+                            part = 1
+
+                        if event.key == pygame.K_SPACE:
+                            lab.reset(algo=True)
+                            lab.draw_grid()
+                            lab.draw_tiles()
+                            pygame.display.flip()
+
+                        if event.key == pygame.K_s:
+                            algo_choice = False
+                            lab.reset(algo=True)
 
         pygame.display.flip()
 

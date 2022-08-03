@@ -215,12 +215,19 @@ class Labyrinth:
             for y in range(self.height):
                 if self.grid[y][x] is not None:
                     pygame.draw.rect(self.screen, (175, 175, 175),
-                                     ( x * self.block + 2, y * self.block + 2 + self.top_pad,
-                                       self.block - 2, self.block - 2))
+                                     (x * self.block + 2, y * self.block + 2 + self.top_pad,
+                                      self.block - 2, self.block - 2))
 
-    def reset(self):
-        """resets the grid of labyrinth"""
-        self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
+    def reset(self, algo=False):
+        if not algo:
+            """resets the grid of labyrinth"""
+            self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
+        else:
+            if self.start:
+                self.grid[self.start[1]][self.start[0]] = 0
+                self.grid[self.end[1]][self.end[0]] = 0
+                self.start = None
+                self.end = None
 
     def print_grid(self):
         for i in range(self.height):
@@ -265,7 +272,7 @@ class Labyrinth:
                              ((j + 1) * self.block, self.screen_height + self.top_pad), 2)
 
     def set_start(self, x, y):
-        if self.grid[y][x] is not None:
+        if self.grid[y][x] == 0:
             self.start = (x, y)
             self.grid[y][x] = "S"
             pygame.draw.rect(self.screen, (0, 125, 0),
@@ -273,10 +280,9 @@ class Labyrinth:
                               self.block - 2, self.block - 2))
 
     def set_end(self, x, y):
-        if self.grid[y][x] is not None:
-            self.start = (x, y)
+        if self.grid[y][x] == 0:
+            self.end = (x, y)
             self.grid[y][x] = "E"
-            pygame.draw.rect(self.screen, (125, 0, 0),
+            pygame.draw.rect(self.screen, (155, 0, 0),
                              (x * self.block + 2, y * self.block + 2 + self.top_pad,
                               self.block - 2, self.block - 2))
-

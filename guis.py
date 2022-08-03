@@ -191,39 +191,42 @@ def start_gui(screen, font, width, top_pad, right_pad):
 
 
 def lab_gui(font, width, height, top_pad, right_pad, d, p):
-    # TEXT FOR CHOICES
-    button_font = pygame.font.SysFont("sanscomic", 55)
+    # TEXT
+    button_font = pygame.font.SysFont("arial", 40)
+    title_font = pygame.font.SysFont("arial", 50)
+    title_text = "Creating labyrinth"
     horizontal_text = "Space: clear labyrinth    R : reset the grid size    S :  search algo"
-    h_text = Text(font, (90, 0), width - 2 * right_pad, 50, horizontal_text, (0, 0, 0), (80, 80, 80))
+    h_text = Text(font, (90, 60), width - 2 * right_pad, 50, horizontal_text, (0, 0, 0), (80, 80, 80))
+    t_text = Text(title_font, (90, 0), width - 2 * right_pad, 70, title_text, (0, 0, 0), (80, 80, 80))
 
     # d text and buttons
     vertical_text1 = f"d:{d}"
-    v_text1 = Changing_Text(font, (width + 2, 2 * top_pad), right_pad, top_pad, vertical_text1, (0, 0, 0), (80, 80, 80))
-    d_plus = Button("+", right_pad / 2 - 10, right_pad / 2 - 10, (width + 5 + right_pad / 4, 2 * top_pad - 50),
+    v_text1 = Changing_Text(font, (width + 2, 1.5 * top_pad), right_pad, 50, vertical_text1, (0, 0, 0), (80, 80, 80))
+    d_plus = Button("+", right_pad / 2 - 10, right_pad / 2 - 10, (width + 5 + right_pad / 4, 1.5 * top_pad - 50),
                     button_font,
                     v_text1)
-    d_minus = Button("-", right_pad / 2 - 10, right_pad / 2 - 10, (width + 5 + right_pad / 4, 3 * top_pad + 5),
+    d_minus = Button("-", right_pad / 2 - 10, right_pad / 2 - 10, (width + 5 + right_pad / 4, 1.5 * top_pad + 50),
                      button_font,
                      v_text1)
 
     # p text and buttons
     vertical_text2 = f"p:{p}"
-    v_text2 = Changing_Text(font, (width + 2, 6 * top_pad), right_pad, top_pad, vertical_text2, (0, 0, 0), (80, 80, 80))
-    p_plus = Button("+", right_pad / 2 - 10, right_pad / 2 - 10, (width + 5 + right_pad / 4, 6 * top_pad - 50),
+    v_text2 = Changing_Text(font, (width + 2, 3.5 * top_pad), right_pad, 50, vertical_text2, (0, 0, 0), (80, 80, 80))
+    p_plus = Button("+", right_pad / 2 - 10, right_pad / 2 - 10, (width + 5 + right_pad / 4, 3.5 * top_pad - 50),
                     button_font,
                     v_text2)
-    p_minus = Button("-", right_pad / 2 - 10, right_pad / 2 - 10, (width + 5 + right_pad / 4, 7 * top_pad + 5),
+    p_minus = Button("-", right_pad / 2 - 10, right_pad / 2 - 10, (width + 5 + right_pad / 4, 3.5 * top_pad + 50),
                      button_font,
                      v_text2)
 
     # save image
     save_image = pygame.image.load("save.png").convert_alpha()
     save_image = pygame.transform.scale(save_image, (50, 50))
-    save_button = Image_Button(width + right_pad / 4, 11 * top_pad, save_image, width, height)
+    save_button = Image_Button(width + right_pad / 4, 5 * top_pad, save_image, width, height)
 
     # group buttons and text
     buttons = Button_Collection([d_plus, d_minus, p_minus, p_plus])
-    collection = Text_Collection([h_text, v_text1, v_text2])
+    collection = Text_Collection([h_text, v_text1, v_text2, t_text])
     return collection, buttons, save_button
 
 
@@ -265,7 +268,6 @@ def search_choice_gui(screen, font, width, top_pad, right_pad):
 
 
 def algo_gui(font, width, height, top_pad, right_pad, algo):
-    # TEXT FOR CHOICES
     button_font = pygame.font.SysFont("sanscomic", 55)
     horizontal_text = "Space: reset start-end    R : reset the grid size    S :  search algo"
     h_text = Text(font, (90, 0), width - 2 * right_pad, 50, horizontal_text, (0, 0, 0), (80, 80, 80))
