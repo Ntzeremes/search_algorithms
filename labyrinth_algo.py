@@ -1,5 +1,5 @@
-""""Has the classes that are used to create the labyrinth inside the grid
-The function path inside the labyrinth class is the one that starts end generates the labyrinth
+""""Has the classes that are used to create the labyrinth inside the grid. Node and Labyrinth
+The function path inside the labyrinth class is the one that starts end creates the labyrinth
 inside the grid"""
 
 import time
@@ -152,6 +152,8 @@ class Node:
 
     @staticmethod
     def change_propagate(sign):
+        """Static method of the class that is called when the user clicks on the propagate buttons to change
+        the propagate parameter"""
         if sign == "+":
             Node.propagate_chance += 0.02
             if Node.propagate_chance > 1:
@@ -167,6 +169,8 @@ class Node:
 
     @staticmethod
     def change_direction(sign):
+        """Static method of the class that is called when the user clicks on the direction buttons to change
+        the change parameter"""
         if sign == "+":
             Node.same_direction += 0.02
             if Node.same_direction > 1:
@@ -210,7 +214,7 @@ class Labyrinth:
             pygame.display.flip()
 
     def draw_tiles(self):
-        """When we choose a search algorithm , we draw the previously picked labyrinth"""
+        """Draws the tiles of the path on the grid"""
         for x in range(self.width):
             for y in range(self.height):
                 if self.grid[y][x] is not None:
@@ -219,8 +223,10 @@ class Labyrinth:
                                       self.block - 2, self.block - 2))
 
     def reset(self, algo=False):
+        """resets the grid of labyrinth making the grid values None if we are at the labyrinth gui
+        . If we are in the algo search gui
+        makes the start and end attributes None again."""
         if not algo:
-            """resets the grid of labyrinth"""
             self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
         else:
             if self.start:
@@ -272,6 +278,8 @@ class Labyrinth:
                              ((j + 1) * self.block, self.screen_height + self.top_pad), 2)
 
     def set_start(self, x, y):
+        """Saves the start point form the x and y mouse coordinates in the grid and in the self.start attribute
+        also draw a green start tile inside the greed"""
         if self.grid[y][x] == 0:
             self.start = (x, y)
             self.grid[y][x] = "S"
@@ -280,6 +288,8 @@ class Labyrinth:
                               self.block - 2, self.block - 2))
 
     def set_end(self, x, y):
+        """Saves the end point form the x and y mouse coordinates in the grid and in the self.start attribute
+        also draw a red start tile inside the greed"""
         if self.grid[y][x] == 0:
             self.end = (x, y)
             self.grid[y][x] = "E"

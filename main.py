@@ -1,3 +1,5 @@
+"""Main script that is used when we run the search algo program"""
+
 import pygame
 from labyrinth_algo import *
 from guis import *
@@ -35,7 +37,7 @@ def main():
     part = 1
 
     while not terminate:
-        clock.tick(15)
+        clock.tick(20)
 
         # part 1 is the starting part , first the user chooses the grid and the labyrinth generator
         if part == 1:
@@ -109,6 +111,7 @@ def main():
                     terminate = True
             else:
                 start_button.draw(screen)
+                start_button.check_click()
                 for event in pygame.event.get():
 
                     if event.type == pygame.QUIT:

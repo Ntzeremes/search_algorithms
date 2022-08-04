@@ -4,7 +4,7 @@ from labyrinth_algo import Node
 
 
 class Text:
-    """Text class that prints text on the screen surface"""
+    """Text class that created and prints text on the screen surface"""
 
     def __init__(self, font, pos, width, height, text, text_color=(255, 255, 255), top_color=(0, 0, 0)):
         self.font = font
@@ -23,6 +23,7 @@ class Text:
 
 
 class Changing_Text(Text):
+    """Child class of Text, used when we want to have a text that changes."""
     def change_text(self, value):
         self.text = f"{self.text[0]}:{value}"
 
@@ -76,6 +77,7 @@ class Button:
 
 
 class Image_Button:
+    """Special Button class used for the save icon"""
     def __init__(self, x, y, image, width, height):
         self.x = x
         self.y = y
@@ -89,6 +91,7 @@ class Image_Button:
         screen.blit(self.image, (self.x, self.y))
 
     def check_click(self, lab):
+        """If clicked the save button saves the pygame screen as a png and the labyrinth grid inside a txt file"""
         mouse_pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(*mouse_pos):
             if pygame.mouse.get_pressed()[0]:
@@ -107,6 +110,7 @@ class Image_Button:
         return False
 
     def save_image(self, screen_width, screen_height, lab):
+        """Function that uses pillow to save the labyrinth tiles as a png file."""
         from PIL import Image, ImageDraw
 
         grid = lab.grid
@@ -191,6 +195,8 @@ def start_gui(screen, font, width, top_pad, right_pad):
 
 
 def lab_gui(font, width, height, top_pad, right_pad, d, p):
+    """Creates the lab gui that has some text that guides the user and some buttons to change
+    the labyrinth parameters"""
     # TEXT
     button_font = pygame.font.SysFont("arial", 40)
     title_font = pygame.font.SysFont("arial", 50)
@@ -231,7 +237,9 @@ def lab_gui(font, width, height, top_pad, right_pad, d, p):
 
 
 def search_choice_gui(screen, font, width, top_pad, right_pad):
-    """Creating the gui from which the user will choose an algorithm"""
+    """Creating the gui from which the user will choose a search algorithm
+
+    Returns the choice"""
 
     terminate = False
     clock = pygame.time.Clock()
@@ -268,15 +276,20 @@ def search_choice_gui(screen, font, width, top_pad, right_pad):
 
 
 def algo_gui(font, width, height, top_pad, right_pad, algo):
-    button_font = pygame.font.SysFont("sanscomic", 55)
-    horizontal_text = "Space: reset start-end    R : reset the grid size    S :  search algo"
-    h_text = Text(font, (90, 0), width - 2 * right_pad, 50, horizontal_text, (0, 0, 0), (80, 80, 80))
+    """Created the gui on which the """
+    algo_dict = {1: "Breadth first search", 2: "Depth first search", 3: "A*", 4: "None"}
 
-    algo_dict = {1: "BFS", 2: "DFS", 3: "A*", 4: "None"}
+    title_font = pygame.font.SysFont("arial", 50)
+    button_font = pygame.font.SysFont("sanscomic", 40)
+
+    title_text = algo_dict[algo]
+    horizontal_text = "Space: reset start-end    R : reset the grid size    S :  search algo"
+    t_text = Text(title_font, (90, 0), width - 2 * right_pad, 70, title_text, (225, 105, 14), (80, 80, 80))
+    h_text = Text(font, (90, 60), width - 2 * right_pad, 50, horizontal_text, (0, 0, 0), (80, 80, 80))
 
     button_h = 90
-    start_button = Button(f"Start {algo_dict[algo]}", 80, 100, (width + 10, 210 + 1 * button_h), font)
+    start_button = Button(f"Start", 80, 60, (width + 10, 210 + 1 * button_h), button_font)
 
-    collection = Text_Collection([h_text])
+    collection = Text_Collection([h_text, t_text])
 
     return collection, start_button
